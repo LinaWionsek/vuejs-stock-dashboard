@@ -1,31 +1,38 @@
 <template>
 
 
-    <BaseCard>
-      <h1>Willkommen!</h1>
-      <p>Das ist eine wiederverwendbare Karte mit einem flexiblen Inhalt.</p>
-    </BaseCard>
+  <BaseCard>
+    <h1>Willkommen!</h1>
+    <p>Das ist eine wiederverwendbare Karte mit einem flexiblen Inhalt.</p>
+
+    <!-- <div v-if="loading">Daten werden geladen...</div>
+    <div v-else-if="error">Fehler: {{ error }}</div>
+    <div v-else>
+      <pre>{{ data }}</pre>
+    </div> -->
+  </BaseCard>
 
 
 </template>
 
-<script>
+<script setup>
+import { onMounted } from 'vue'
+import BaseCard from './components/BaseCard.vue'
+import { useStockData } from './composables/useStockData'
 
-import BaseCard from './components/BaseCard.vue';
+// Hole Daten von der API (AAPL)
+const { data, loading, error, fetchData } = useStockData()
 
-
-export default {
-  name: 'App',
-  components: {
-    BaseCard
-  }
-}
+onMounted(() => {
+  fetchData('AAPL')
+  console.log('Daten wurden geladen', data)
+})
 </script>
 
 <style>
 body {
   margin: 0;
- 
+
 }
 
 #app {
