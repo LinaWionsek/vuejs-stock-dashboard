@@ -5,11 +5,11 @@
     <h1>Willkommen!</h1>
     <p>Das ist eine wiederverwendbare Karte mit einem flexiblen Inhalt.</p>
 
-    <!-- <div v-if="loading">Daten werden geladen...</div>
+    <div v-if="loading">Daten werden geladen...</div>
     <div v-else-if="error">Fehler: {{ error }}</div>
     <div v-else>
       <pre>{{ data }}</pre>
-    </div> -->
+    </div>
   </BaseCard>
 
 
@@ -21,12 +21,18 @@ import BaseCard from './components/BaseCard.vue'
 import { useStockData } from './composables/useStockData'
 
 // Hole Daten von der API (AAPL)
-const { data, loading, error, fetchData } = useStockData()
+const { data, loading, error, fetchData, getRevenue, revenue } = useStockData()
 
-onMounted(() => {
-  fetchData('AAPL')
+onMounted(async() => {
+  await fetchData('AAPL')
+  getRevenue()
   console.log('Daten wurden geladen', data)
+  console.log('Sortierte Umsätze:', revenue)
 })
+
+
+
+
 </script>
 
 <style>
