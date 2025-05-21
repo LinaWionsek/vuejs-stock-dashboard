@@ -1,16 +1,22 @@
 <template>
 
-
-  <BaseCard>
+<OverviewBackgroundCard class="flex justify-center items-center">
+   <BaseCard class="flex flex-col">
     <h1>Willkommen!</h1>
     <p>Das ist eine wiederverwendbare Karte mit einem flexiblen Inhalt.</p>
 
     <div v-if="loading">Daten werden geladen...</div>
     <div v-else-if="error">Fehler: {{ error }}</div>
     <div v-else>
-      <pre>{{ data }}</pre>
+      <ul>
+        <li v-for="(entry, index) in quarter" :key="index">
+          {{ entry.quarter }}
+        </li>
+      </ul>
     </div>
   </BaseCard>
+</OverviewBackgroundCard>
+ 
 
 
 </template>
@@ -19,15 +25,19 @@
 import { onMounted } from 'vue'
 import BaseCard from './components/BaseCard.vue'
 import { useStockData } from './composables/useStockData'
+import OverviewBackgroundCard from './components/OverviewBackgroundCard.vue'
+
 
 // Hole Daten von der API (AAPL)
-const { data, loading, error, fetchData, getRevenue, revenue } = useStockData()
+const { data, loading, error, fetchData, getRevenue, revenue, getQuarter, quarter } = useStockData()
 
 onMounted(async() => {
   await fetchData('AAPL')
   getRevenue()
+  getQuarter()
   console.log('Daten wurden geladen', data)
   console.log('Sortierte Umsätze:', revenue)
+  console.log('Sortierte Quarter:', quarter)
 })
 
 

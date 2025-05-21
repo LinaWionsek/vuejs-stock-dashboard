@@ -24,6 +24,7 @@ export function useStockData() {
   const loading = ref(false)
   const error = ref(null)
   const revenue = ref([])
+  const quarter = ref([])
 
   // Fetches stock data from the SheetDB API for a given symbol (default: AAPL).
   // Sets loading, error and stores the result in data.value
@@ -59,8 +60,24 @@ export function useStockData() {
     })
     return revenue.value
   }
+
+  const getQuarter = () => {
+    if (!data.value || !data.value[1]) {
+      console.warn('⚠️ Daten fehlen oder sind leer:', data.value)
+      return []
+    }
+    const obj = data.value[1]
+     quarter.value = order.map(key => {
+      const raw = obj[key]
+      return {
+        month: key,
+        quarter: raw
+      }
+    })
+    return quarter
+  }
   
-  return { data, loading, error, fetchData, getRevenue, revenue }
+  return { data, loading, error, fetchData, getRevenue, revenue, getQuarter, quarter }
 }
 
 

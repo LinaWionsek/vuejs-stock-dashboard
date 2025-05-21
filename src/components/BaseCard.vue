@@ -11,10 +11,14 @@
   </script>
   
   <style scoped>
+
+
   .base-card {
     background-color: #011f35;
     border-radius: 16px;
     padding: 20px 32px;
+    width: 173px;
+    height: 143px; /*fix*/
     color: #ffffff; /* Standardmäßige Textfarbe für besseren Kontrast */
   }
   </style>
