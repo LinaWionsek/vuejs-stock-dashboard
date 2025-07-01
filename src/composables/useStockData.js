@@ -25,6 +25,7 @@ export function useStockData() {
   const error = ref(null)
   const revenue = ref([])
   const quarter = ref([])
+  const quarterAndRevenue = ref([])
 
   // Fetches stock data from the SheetDB API for a given symbol (default: AAPL).
   // Sets loading, error and stores the result in data.value
@@ -47,7 +48,7 @@ export function useStockData() {
   // Converts string values to floats.
   const getRevenue = () => {
     if (!data.value || !data.value[3]) {
-      console.warn('⚠️ Daten fehlen oder sind leer:', data.value)
+      console.warn('⚠️ data is missing or empty', data.value)
       return []
     }
     const obj = data.value[3]
@@ -63,7 +64,7 @@ export function useStockData() {
 
   const getQuarter = () => {
     if (!data.value || !data.value[1]) {
-      console.warn('⚠️ Daten fehlen oder sind leer:', data.value)
+      console.warn('⚠️ data is missing or empty:', data.value)
       return []
     }
     const obj = data.value[1]
@@ -76,8 +77,28 @@ export function useStockData() {
     })
     return quarter
   }
+
+  //experimental!
+  const getQuarterAndRevenue = () => {
+    if (!data.value || !data.value[1] || !data.value[3]) {
+      console.warn('⚠️ data is missing or empty:', data.value)
+      return[]
+    }
+    const quartersObj = data.value[1]
+    const revenueObj = data.value[3]
+
+    quarterAndRevenue.value = order.map(key => {
+      const rawQuarter = quartersObj[key]
+      const rawRevenue = revenueObj[key]
+      return {
+        monthKey: key,
+        quarter: rawQuarter || '-',
+        revenue: rawRevenue ? parseFloat(rawRevenue.replace(',', '.')) : null
+      }
+    })
+  }
   
-  return { data, loading, error, fetchData, getRevenue, revenue, getQuarter, quarter }
+  return { data, loading, error, fetchData, getRevenue, revenue, getQuarter, quarter, getQuarterAndRevenue, quarterAndRevenue }
 }
 
 
