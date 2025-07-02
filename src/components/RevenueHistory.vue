@@ -21,8 +21,12 @@ import BaseCard from './BaseCard.vue';
   
   <style scoped>
 
-  .revenue-history-card-size {
-    width: 300px;
+  .revenue-history-card-size { 
+    width: 714px;
+    height: 352px;
+    gap: 20px;
+    border-radius: 16px;
+    padding: 20px 32px;
   }
 
  

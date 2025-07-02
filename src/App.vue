@@ -1,23 +1,35 @@
 <template>
+  <div class="flex items-center">
+    <div class="symbol"></div>
+    <h1 class="ml-6 text-white text-4xl font-medium">The Magnificent Seven Companies</h1>
+  </div>
 
-<OverviewBackgroundCard class="flex justify-center items-center">
-   <BaseCard class="flex flex-col">
+<OverviewBackgroundCard class="flex items-center justify-center relative">
+  <img class="absolute right-2" src="../public/img/arrow.png" alt="">
+  <BaseCard></BaseCard>
+  <BaseCard></BaseCard>
+  <BaseCard></BaseCard>
+  <BaseCard></BaseCard>
+  <BaseCard></BaseCard>
+  <BaseCard></BaseCard>
+</OverviewBackgroundCard>
+<RevenueHistory>  <h2>Revenue last 3 years</h2>
+
     <h1>Willkommen!</h1>
     <p>Das ist eine wiederverwendbare Karte mit einem flexiblen Inhalt.</p>
 
     <div v-if="loading">Daten werden geladen...</div>
     <div v-else-if="error">Fehler: {{ error }}</div>
-    <div v-else>
-      <ul>
-        <li v-for="(entry, index) in quarterAndRevenue" :key="index">
+    <div v-else class="flex flex-wrap">
+      
+        <div class="flex w-40" v-for="(entry, index) in quarterAndRevenue" :key="index">
           {{ entry.quarter }} - {{ entry.revenue }}
-        </li>
+        </div>
        
-      </ul>
+      
     </div>
-  </BaseCard>
-</OverviewBackgroundCard>
-<RevenueHistory>  <h2>Revenue last 3 years</h2> </RevenueHistory>
+
+</RevenueHistory>
 
 
 </template>
@@ -60,6 +72,19 @@ body {
   min-height: 100vh;
   padding: 100px;
   box-sizing: border-box;
+  position: relative;
   background: radial-gradient(71.11% 100% at 50% 0%, #020204 14.6%, #011F35 100%);
+}
+
+.symbol {
+  width: 96px;
+  height: 32px;
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
+  background: #39DAFF;
+  position: absolute;
+  left: 0;
+
+
 }
 </style>
