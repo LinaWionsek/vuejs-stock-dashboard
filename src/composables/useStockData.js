@@ -1,24 +1,26 @@
 import { ref } from 'vue'
 
-const order = [
-  'Mar 21',
-  'Jun 21',
-  'Sep 21',
-  'Dec 21',
-  'Mar 22',
-  'Jun 22',
-  'Sep 22',
-  'Dec 22',
-  'Mar 23',
-  '""',
-  '3 Aug 23',
-  '2 Nov 23',
-  '1 Feb 24',
-  '2 Mai 24',
-  '1 Aug 24',
-  '31 Oct 24',
-  '30 Jan 25',
-];
+// const orderAAPL = [
+//   'Mar 21',
+//   'Jun 21',
+//   'Sep 21',
+//   'Dec 21',
+//   'Mar 22',
+//   'Jun 22',
+//   'Sep 22',
+//   'Dec 22',
+//   'Mar 23',
+//   '""',
+//   '3 Aug 23',
+//   '2 Nov 23',
+//   '1 Feb 24',
+//   '2 Mai 24',
+//   '1 Aug 24',
+//   '31 Oct 24',
+//   '30 Jan 25',
+// ];
+let order = []
+
 export function useStockData() {
   const data = ref(null)
   const loading = ref(false)
@@ -41,6 +43,16 @@ export function useStockData() {
     } finally {
       loading.value = false
     }
+  }
+
+  const getOrder = () => {
+    if (!data.value || !data.value[3]) {
+      console.warn('⚠️ data is missing or empty', data.value)
+      return []
+    }
+    const obj = data.value[3]
+    order = Object.keys(obj)
+    return order
   }
 
   // Extracts and parses revenue values from the fetched data.
@@ -68,7 +80,7 @@ export function useStockData() {
       return []
     }
     const obj = data.value[1]
-     quarter.value = order.map(key => {
+    quarter.value = order.map(key => {
       const raw = obj[key]
       return {
         month: key,
@@ -82,7 +94,7 @@ export function useStockData() {
   const getQuarterAndRevenue = () => {
     if (!data.value || !data.value[1] || !data.value[3]) {
       console.warn('⚠️ data is missing or empty:', data.value)
-      return[]
+      return []
     }
     const quartersObj = data.value[1]
     const revenueObj = data.value[3]
@@ -97,8 +109,8 @@ export function useStockData() {
       }
     })
   }
-  
-  return { data, loading, error, fetchData, getRevenue, revenue, getQuarter, quarter, getQuarterAndRevenue, quarterAndRevenue }
+
+  return { data, loading, error, fetchData, getOrder, getRevenue, revenue, getQuarter, quarter, getQuarterAndRevenue, quarterAndRevenue }
 }
 
 

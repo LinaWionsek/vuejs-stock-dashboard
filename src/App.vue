@@ -43,10 +43,11 @@ import RevenueHistory from './components/RevenueHistory.vue'
 
 
 // Hole Daten von der API (AAPL)
-const { data, loading, error, fetchData, getRevenue, revenue, getQuarter, quarter, getQuarterAndRevenue, quarterAndRevenue } = useStockData()
+const { data, loading, error, fetchData, getOrder, getRevenue, revenue, getQuarter, quarter, getQuarterAndRevenue, quarterAndRevenue } = useStockData()
 
 onMounted(async() => {
-  await fetchData('AAPL')
+  await fetchData('META')
+  getOrder()
   getRevenue()
   getQuarter()
   getQuarterAndRevenue()
