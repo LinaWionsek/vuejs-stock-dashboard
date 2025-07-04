@@ -1,24 +1,5 @@
 import { ref } from 'vue'
 
-// const orderAAPL = [
-//   'Mar 21',
-//   'Jun 21',
-//   'Sep 21',
-//   'Dec 21',
-//   'Mar 22',
-//   'Jun 22',
-//   'Sep 22',
-//   'Dec 22',
-//   'Mar 23',
-//   '""',
-//   '3 Aug 23',
-//   '2 Nov 23',
-//   '1 Feb 24',
-//   '2 Mai 24',
-//   '1 Aug 24',
-//   '31 Oct 24',
-//   '30 Jan 25',
-// ];
 let order = []
 
 export function useStockData() {
@@ -82,9 +63,17 @@ export function useStockData() {
     const obj = data.value[1]
     quarter.value = order.map(key => {
       const raw = obj[key]
+
+      let flippedQuarter = raw
+      if (raw && raw.length >= 4) {
+        const year = raw.slice(0,2)
+        const quarterPart = raw.slice(2)
+        flippedQuarter = `${quarterPart} 20${year}`
+      }
+
       return {
         month: key,
-        quarter: raw
+        quarter: flippedQuarter
       }
     })
     return quarter
@@ -99,6 +88,7 @@ export function useStockData() {
     const quartersObj = data.value[1]
     const revenueObj = data.value[3]
 
+    // durch das mapping entsteht ein Array aus Objekten!
     quarterAndRevenue.value = order.map(key => {
       const rawQuarter = quartersObj[key]
       const rawRevenue = revenueObj[key]

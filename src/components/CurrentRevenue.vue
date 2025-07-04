@@ -1,14 +1,21 @@
 <template>
   <div class="overview-bg-card">
-    <slot></slot>
+    <BaseCard></BaseCard>
+    <BaseCard></BaseCard>
+    <BaseCard>hjih</BaseCard>
+    <BaseCard></BaseCard>
+    <BaseCard></BaseCard>
+    <BaseCard></BaseCard>
   </div>
 </template>
 
-<script>
-export default {
-  name: "OverviewBackgroundCard",
-};
+<script setup>
+
+import BaseCard from './BaseCard.vue';
+
 </script>
+
+
 
 <style scoped>
 .overview-bg-card {
