@@ -1,24 +1,16 @@
 <template>
-  <div>
-    <BaseCard class="revenue-history-card-size">
-      <h1>Willkommen!</h1>
-      <p>Das ist eine wiederverwendbare Karte mit einem flexiblen Inhalt.</p>
+  <BaseCard class="revenue-history-card-size">
+    <h2 class="text-xl font-bold">Revenue last 3 years</h2>
 
-      <div v-if="loading">Daten werden geladen...</div>
-      <div v-else-if="error">Fehler: {{ error }}</div>
-      <div v-else class="flex flex-wrap">
-        <div>
-          <h1>Last Entry</h1>
-          Revenue: {{ quarterAndRevenue[quarterAndRevenue.length -1]?.revenue }}
-          {{ quarter[quarter.length -1]?.quarter }}
-        </div>
-<!-- 
-        <div class="flex w-40" v-for="(entry, index) in quarterAndRevenue" :key="index">
-          {{ entry.quarter }} - {{ entry.revenue }}
-        </div> -->
+    <div v-if="loading">Daten werden geladen...</div>
+    <div v-else-if="error">Fehler: {{ error }}</div>
+    <div v-else class="flex flex-wrap">
+      <div>
+        Revenue: {{ quarterAndRevenue[quarterAndRevenue.length - 1]?.revenue }}
+        {{ quarter[quarter.length - 1]?.quarter }}
       </div>
-    </BaseCard>
-  </div>
+    </div>
+  </BaseCard>
 </template>
 
 <script setup>
@@ -50,7 +42,7 @@ onMounted(async () => {
   console.log("Daten wurden geladen", data);
   console.log("Sortierte Umsätze:", revenue);
   console.log("Sortierte Quarter:", quarter);
-  console.log("Revenue und Quarter:", quarterAndRevenue.value.length-1);
+  console.log("Revenue und Quarter:", quarterAndRevenue.value.length - 1);
 });
 </script>
 

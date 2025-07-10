@@ -3,19 +3,21 @@
     <div class="symbol"></div>
     <h1 class="ml-6 text-white text-4xl font-medium">The Magnificent Seven Companies</h1>
   </div>
-
-  <CurrentRevenue class="flex items-center justify-center relative">
-    <img class="absolute right-2" src="../public/img/arrow.png" alt="" />
-    
-  </CurrentRevenue>
-  <RevenueHistory> <h2>Revenue last 3 years</h2> </RevenueHistory>
+  <div class="flex flex-col items-center">
+    <CurrentRevenue class="flex items-center justify-center relative mt-12">
+      <img class="absolute right-2" src="../public/img/arrow.png" alt="" />
+    </CurrentRevenue>
+    <div class="flex gap-8 mt-8 mb-8">
+      <RevenueHistory></RevenueHistory>
+      <RevenueBreakdown></RevenueBreakdown>
+    </div>
+  </div>
 </template>
 
 <script setup>
-
 import RevenueHistory from "./components/RevenueHistory.vue";
 import CurrentRevenue from "./components/CurrentRevenue.vue";
-
+import RevenueBreakdown from "./components/RevenueBreakdown.vue";
 </script>
 
 <style>
@@ -41,5 +43,4 @@ body {
   position: absolute;
   left: 0;
 }
-
 </style>
