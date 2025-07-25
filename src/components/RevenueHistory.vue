@@ -6,8 +6,9 @@
     <div v-else-if="error">Fehler: {{ error }}</div>
     <div v-else class="flex flex-wrap">
       <div>
-        Revenue: {{ quarterAndRevenue[quarterAndRevenue.length - 1]?.revenue }}
-        {{ quarter[quarter.length - 1]?.quarter }}
+        Revenue:
+        {{ allStockData }}
+       
       </div>
     </div>
   </BaseCard>
@@ -20,29 +21,12 @@ import { onMounted } from "vue";
 
 // Hole Daten von der API (AAPL)
 const {
-  data,
-  loading,
-  error,
-  fetchData,
-  getOrder,
-  getRevenue,
-  revenue,
-  getQuarter,
-  quarter,
-  getQuarterAndRevenue,
-  quarterAndRevenue,
+  allStockData
 } = useStockData();
 
 onMounted(async () => {
-  await fetchData("META");
-  getOrder();
-  getRevenue();
-  getQuarter();
-  getQuarterAndRevenue();
-  console.log("Daten wurden geladen", data);
-  console.log("Sortierte Umsätze:", revenue);
-  console.log("Sortierte Quarter:", quarter);
-  console.log("Revenue und Quarter:", quarterAndRevenue.value.length - 1);
+
+
 });
 </script>
 

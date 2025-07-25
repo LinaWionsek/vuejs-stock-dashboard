@@ -18,6 +18,19 @@
 import RevenueHistory from "./components/RevenueHistory.vue";
 import CurrentRevenue from "./components/CurrentRevenue.vue";
 import RevenueBreakdown from "./components/RevenueBreakdown.vue";
+import { useStockData } from "./composables/useStockData";
+import { onMounted } from "vue";
+
+// Hole Daten von der API (AAPL)
+const {
+  buildAllStockData
+} = useStockData();
+
+onMounted(async () => {
+
+  buildAllStockData()
+
+});
 </script>
 
 <style>

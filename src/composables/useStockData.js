@@ -1,106 +1,108 @@
 import { ref } from 'vue'
 
-let order = []
+const allStockData = ref({}) // ref({}) -> reactive vue object
+const loading = ref(false)
 
 export function useStockData() {
-  const data = ref(null)
-  const loading = ref(false)
-  const error = ref(null)
-  const revenue = ref([])
-  const quarter = ref([])
-  const quarterAndRevenue = ref([])
 
-  // Fetches stock data from the SheetDB API for a given symbol (default: AAPL).
-  // Sets loading, error and stores the result in data.value
-  const fetchData = async (symbol = 'AAPL') => {
+  const addStockToGlobal = async (symbol, revenueIndex, quarterIndex) => {
     loading.value = true
-    error.value = null
+
     try {
       const res = await fetch(`https://sheetdb.io/api/v1/s9jszd8ymfgwg?sheet=$${symbol}`)
-      if (!res.ok) throw new Error(`Fehler beim Abrufen der Daten für ${symbol}`)
-      data.value = await res.json()
+      if (!res.ok) throw new Error(`Error retrieving data for AAPL ${symbol}`)
+
+      const data = await res.json()
+      const revenueObj = data[revenueIndex]
+      const quarterObj = data[quarterIndex]
+
+      const keys = Object.keys(revenueObj)
+      const formatted = keys.map(key => {
+        const rawRevenue = revenueObj[key]
+        const rawQuarter = quarterObj[key]
+        const quarter = formatQuarter(rawQuarter)
+        // let quarter = rawQuarter || '-'
+        // if (rawQuarter && rawQuarter.length >= 4) {
+        //   const year = rawQuarter.slice(0, 2)
+        //   const q = rawQuarter.slice(2)
+        //   quarter = `${q} 20${year}`
+        // }
+        return {
+          quarter,
+          revenue: rawRevenue ? parseFloat(rawRevenue.replace(',', '.')) : null
+        }
+      })
+      const sorted = formatted
+      .filter(e => e.quarter.startsWith('Q')).sort(sortByQuarterAndYear)
+      allStockData.value[symbol] = sorted
+     
     } catch (err) {
-      error.value = err.message
+      console.warn(`Error at ${symbol}:`, err.message)
     } finally {
       loading.value = false
     }
   }
 
-  const getOrder = () => {
-    if (!data.value || !data.value[3]) {
-      console.warn('⚠️ data is missing or empty', data.value)
-      return []
+  const formatQuarter = (input) => {
+  if (!input) return '-'
+
+  const cleaned = input.trim().toLowerCase()
+  if (cleaned === 'quarter') return '-'
+  //Ersetzt Bindestriche durch Leerzeichen und splittet den String:
+  const parts = input.replace('-', ' ').split(/\s+/)
+  let q, year
+  //Prüft, ob es zwei Teile gibt
+  if (parts.length === 2) {
+    // e.g. "Q1 23" oder "23 Q1"
+    if (parts[0].startsWith('Q')) {
+      [q, year] = parts
+    } else {
+      [year, q] = parts
     }
-    const obj = data.value[3]
-    order = Object.keys(obj)
-    return order
+  } else {
+    // e.g. "23Q1", "Q123", "2023Q1"
+    const match = input.match(/(20\d{2}|\d{2})?Q?(\d)/)
+    if (match) {
+      year = match[1] || ''
+      q = match[2] ? `Q${match[2]}` : ''
+    }
   }
 
-  // Extracts and parses revenue values from the fetched data.
-  // Uses the predefined 'order' array to ensure correct chronological sorting.
-  // Converts string values to floats.
-  const getRevenue = () => {
-    if (!data.value || !data.value[3]) {
-      console.warn('⚠️ data is missing or empty', data.value)
-      return []
-    }
-    const obj = data.value[3]
-    revenue.value = order.map(key => {
-      const raw = obj[key]
-      return {
-        quarter: key,
-        revenue: raw ? parseFloat(raw.replace(',', '.')) : null
-      }
-    })
-    return revenue.value
+  if (!year || !q) return input
+
+  year = year.length === 2 ? '20' + year : year
+  q = q.startsWith('Q') ? q : 'Q' + q
+
+  return `${q} ${year}`
+}
+
+
+const sortByQuarterAndYear = (a, b) => {
+  const [qa, ya] = a.quarter.split(' ')
+  const [qb, yb] = b.quarter.split(' ')
+
+  const yearA = parseInt(ya)
+  const yearB = parseInt(yb)
+  const quarterA = parseInt(qa.replace('Q', ''))
+  const quarterB = parseInt(qb.replace('Q', ''))
+
+  // Sortiere nach Jahr, dann Quartal
+  if (yearA !== yearB) return yearA - yearB
+  return quarterA - quarterB
+}
+
+
+  const buildAllStockData = async () => {
+    await addStockToGlobal('AAPL', 3, 1)
+    await addStockToGlobal('AMZN', 7, 1)
+    await addStockToGlobal('GOOG', 3, 1)
+    await addStockToGlobal('META', 3, 1)
+    await addStockToGlobal('MSFT', 7, 1)
+    await addStockToGlobal('NVDA', 3, 1)
+    await addStockToGlobal('TSLA', 13, 1)
+     console.log(allStockData)
   }
-
-  const getQuarter = () => {
-    if (!data.value || !data.value[1]) {
-      console.warn('⚠️ data is missing or empty:', data.value)
-      return []
-    }
-    const obj = data.value[1]
-    quarter.value = order.map(key => {
-      const raw = obj[key]
-
-      let flippedQuarter = raw
-      if (raw && raw.length >= 4) {
-        const year = raw.slice(0,2)
-        const quarterPart = raw.slice(2)
-        flippedQuarter = `${quarterPart} 20${year}`
-      }
-
-      return {
-        month: key,
-        quarter: flippedQuarter
-      }
-    })
-    return quarter
-  }
-
-  //experimental!
-  const getQuarterAndRevenue = () => {
-    if (!data.value || !data.value[1] || !data.value[3]) {
-      console.warn('⚠️ data is missing or empty:', data.value)
-      return []
-    }
-    const quartersObj = data.value[1]
-    const revenueObj = data.value[3]
-
-    // durch das mapping entsteht ein Array aus Objekten!
-    quarterAndRevenue.value = order.map(key => {
-      const rawQuarter = quartersObj[key]
-      const rawRevenue = revenueObj[key]
-      return {
-        monthKey: key,
-        quarter: rawQuarter || '-',
-        revenue: rawRevenue ? parseFloat(rawRevenue.replace(',', '.')) : null
-      }
-    })
-  }
-
-  return { data, loading, error, fetchData, getOrder, getRevenue, revenue, getQuarter, quarter, getQuarterAndRevenue, quarterAndRevenue }
+  return { loading, allStockData, addStockToGlobal, buildAllStockData }
 }
 
 
