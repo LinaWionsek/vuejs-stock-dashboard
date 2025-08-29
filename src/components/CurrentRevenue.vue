@@ -1,13 +1,23 @@
 <template>
   <div class="overview-bg-card">
     <BaseCard>
-     <div class="text-xs">
-      Reveneue {{ allStockData.AAPL.lastQuarter }}
-     </div> 
-     <div>
-      
-      
-     </div>
+      <div class="flex items-center text-xl">
+      <img :src="aaplLogo" alt="Apple Logo" class="w-5 h-5 mr-2" />
+      <span>APPLE</span>
+       </div>
+      <div class="text-xs">Reveneue {{ allStockData.AAPL.lastQuarter }}</div>
+
+      <div class="flex items-center">
+        <div class="text-2xl mr-1">
+          {{ allStockData.AAPL.lastRevenue }}
+        </div>
+        <div class="text-[13px]">
+          <div>+1.06</div>
+          <div>2.83 %</div>
+        </div>
+      </div>
+
+      <div class="text-[8px]">In Bill USD</div>
     </BaseCard>
     <BaseCard></BaseCard>
     <!-- <BaseCard></BaseCard>
@@ -18,17 +28,12 @@
 </template>
 
 <script setup>
+import { useStockData } from "@/composables/useStockData";
+import BaseCard from "./BaseCard.vue";
+import aaplLogo from "@/assets/img/aapl.png";
 
-import { useStockData } from '@/composables/useStockData';
-import BaseCard from './BaseCard.vue';
-
-const {
-  allStockData,
-} = useStockData();
-
+const { allStockData } = useStockData();
 </script>
-
-
 
 <style scoped>
 .overview-bg-card {
