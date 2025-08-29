@@ -10,6 +10,7 @@ export function useStockData() {
     loading.value = true
 
     try {
+      //Retrieve data from SheetDB API
       const res = await fetch(`https://sheetdb.io/api/v1/s9jszd8ymfgwg?sheet=$${symbol}`)
       if (!res.ok) throw new Error(`Error retrieving data for AAPL ${symbol}`)
 
@@ -17,27 +18,49 @@ export function useStockData() {
       const revenueObj = data[revenueIndex]
       const quarterObj = data[quarterIndex]
 
+      //Convert raw data into clean objects
       const keys = Object.keys(revenueObj)
       const formatted = keys.map(key => {
         const rawRevenue = revenueObj[key]
         const rawQuarter = quarterObj[key]
         const quarter = formatQuarter(rawQuarter)
-        // let quarter = rawQuarter || '-'
-        // if (rawQuarter && rawQuarter.length >= 4) {
-        //   const year = rawQuarter.slice(0, 2)
-        //   const q = rawQuarter.slice(2)
-        //   quarter = `${q} 20${year}`
-        // }
+        
         return {
           quarter,
           revenue: rawRevenue ? parseFloat(rawRevenue.replace(',', '.')) : null
         }
       })
+
+      //Only extract valid Q-quarters
+      //Sort them chronologically (by year, then quarter)
       const sorted = formatted
         .filter(e => e.quarter.startsWith('Q')).sort(sortByQuarterAndYear)
-      // allStockData.value[symbol] = sorted
+     
+      //Get latest and previous quarter
+      const last = sorted.at(-1) //actual quarter with entry
+      const prev = sorted.at(-2) //previous quarter with entry
+      
+      //Calculate absolute and percentage change
+      const salesDiff = last.revenue - prev.revenue //differencen in Milliarden
+      const salesChangePercent = (salesDiff / prev.revenue) * 100 //changes in percent
+      
+      //Round values to 2 decimal places
+      const lastQuart = last.quarter
+      const lastRev = parseFloat(last.revenue.toFixed(2)) //tofixed rundet, parsefloat macht es zu zahl
+      const diff = parseFloat(salesDiff.toFixed(2))
+      const salesPerc = parseFloat(salesChangePercent.toFixed(2))
+      const pos = diff >= 0
+      
+      console.log("diff:", diff, "percent:", salesPerc, "last", last, "prev", prev)
+
+      //Store in global stock data object
       allStockData.value[symbol] = {
-        data: sorted
+        data: sorted,              // All entries (sorted)
+        lastQuarter: lastQuart,    // Latest quarter name
+        lastRevenue: lastRev,      // Latest revenue (rounded)
+        difference: diff,          // Revenue change in $ bn
+        percentChange: salesPerc,  // % change from previous quarter
+        positive: pos              // true if revenue increased
       }
 
     } catch (err) {
@@ -95,32 +118,8 @@ export function useStockData() {
     return quarterA - quarterB
   }
 
-  const getLatestEntry = (symbol) => {
-    const arr = allStockData.value[symbol].data
-    const last = arr[arr.length - 1]
-    allStockData.value[symbol].lastQuarter = last.quarter ?? null
-    allStockData.value[symbol].lastRevenue = last.revenue ?? null
-    console.log("new", allStockData.value[symbol])
 
-  }
-
-  const buildAllStockData = async () => {
-    isReady.value = false
-    await addStockToGlobal('AAPL', 3, 1)
-    // await addStockToGlobal('AMZN', 7, 1)
-    // await addStockToGlobal('GOOG', 3, 1)
-    // await addStockToGlobal('META', 3, 1)
-    // await addStockToGlobal('MSFT', 7, 1)
-    // await addStockToGlobal('NVDA', 3, 1)
-    // await addStockToGlobal('TSLA', 13, 1)
-    console.log(allStockData)
-    getLatestEntry('AAPL');
-    isReady.value = true
-  }
-
-
-
-  return { loading, allStockData, addStockToGlobal, buildAllStockData, getLatestEntry, isReady }
+  return { loading, allStockData, addStockToGlobal, isReady }
 }
 
 

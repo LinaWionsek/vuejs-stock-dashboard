@@ -12,11 +12,10 @@
           {{ allStockData.AAPL.lastRevenue }}
         </div>
         <div class="text-[13px]">
-          <div>+1.06</div>
-          <div>2.83 %</div>
+          <div>{{ allStockData.AAPL.difference }}</div>
+          <div>{{ allStockData.AAPL.percentChange }} %</div>
         </div>
       </div>
-
       <div class="text-[8px]">In Bill USD</div>
     </BaseCard>
     <BaseCard></BaseCard>

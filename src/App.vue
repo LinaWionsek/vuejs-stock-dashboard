@@ -28,10 +28,23 @@ import { useStockData } from "./composables/useStockData";
 import { onMounted } from "vue";
 
 // Hole Daten von der API (AAPL)
-const { buildAllStockData, isReady } = useStockData();
+const { addStockToGlobal, isReady } = useStockData();
 
 onMounted(async () => {
-  buildAllStockData();
+  isReady.value = false
+  // Die "Magnificent 7" laden
+  await Promise.all([
+    addStockToGlobal('AAPL', 3, 1),
+    // addStockToGlobal('AMZN', 7, 1),
+    // addStockToGlobal('GOOG', 3, 1),
+    // addStockToGlobal('META', 3, 1),
+    // addStockToGlobal('MSFT', 7, 1),
+    // addStockToGlobal('NVDA', 3, 1),
+    // addStockToGlobal('TSLA', 13, 1)
+  ])
+
+  // Jetzt sind alle fertig
+  isReady.value = true
 });
 </script>
 
