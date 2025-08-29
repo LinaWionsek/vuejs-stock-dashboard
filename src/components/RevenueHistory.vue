@@ -7,8 +7,7 @@
     <div v-else class="flex flex-wrap">
       <div>
         Revenue:
-        {{ allStockData }}
-       
+        <!-- {{ allStockData.AAPL }} -->
       </div>
     </div>
   </BaseCard>
@@ -16,13 +15,13 @@
 
 <script setup>
 import BaseCard from "./BaseCard.vue";
-import { useStockData } from "@/composables/useStockData";
+// import { useStockData } from "@/composables/useStockData";
 import { onMounted } from "vue";
 
 // Hole Daten von der API (AAPL)
-const {
-  allStockData
-} = useStockData();
+// const {
+//   allStockData
+// } = useStockData();
 
 onMounted(async () => {
 

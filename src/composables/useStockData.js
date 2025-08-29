@@ -2,6 +2,7 @@ import { ref } from 'vue'
 
 const allStockData = ref({}) // ref({}) -> reactive vue object
 const loading = ref(false)
+const isReady = ref(false)
 
 export function useStockData() {
 
@@ -33,9 +34,12 @@ export function useStockData() {
         }
       })
       const sorted = formatted
-      .filter(e => e.quarter.startsWith('Q')).sort(sortByQuarterAndYear)
-      allStockData.value[symbol] = sorted
-     
+        .filter(e => e.quarter.startsWith('Q')).sort(sortByQuarterAndYear)
+      // allStockData.value[symbol] = sorted
+      allStockData.value[symbol] = {
+        data: sorted
+      }
+
     } catch (err) {
       console.warn(`Error at ${symbol}:`, err.message)
     } finally {
@@ -44,65 +48,79 @@ export function useStockData() {
   }
 
   const formatQuarter = (input) => {
-  if (!input) return '-'
+    if (!input) return '-'
 
-  const cleaned = input.trim().toLowerCase()
-  if (cleaned === 'quarter') return '-'
-  //Ersetzt Bindestriche durch Leerzeichen und splittet den String:
-  const parts = input.replace('-', ' ').split(/\s+/)
-  let q, year
-  //Prüft, ob es zwei Teile gibt
-  if (parts.length === 2) {
-    // e.g. "Q1 23" oder "23 Q1"
-    if (parts[0].startsWith('Q')) {
-      [q, year] = parts
+    const cleaned = input.trim().toLowerCase()
+    if (cleaned === 'quarter') return '-'
+    //Ersetzt Bindestriche durch Leerzeichen und splittet den String:
+    const parts = input.replace('-', ' ').split(/\s+/)
+    let q, year
+    //Prüft, ob es zwei Teile gibt
+    if (parts.length === 2) {
+      // e.g. "Q1 23" oder "23 Q1"
+      if (parts[0].startsWith('Q')) {
+        [q, year] = parts
+      } else {
+        [year, q] = parts
+      }
     } else {
-      [year, q] = parts
+      // e.g. "23Q1", "Q123", "2023Q1"
+      const match = input.match(/(20\d{2}|\d{2})?Q?(\d)/)
+      if (match) {
+        year = match[1] || ''
+        q = match[2] ? `Q${match[2]}` : ''
+      }
     }
-  } else {
-    // e.g. "23Q1", "Q123", "2023Q1"
-    const match = input.match(/(20\d{2}|\d{2})?Q?(\d)/)
-    if (match) {
-      year = match[1] || ''
-      q = match[2] ? `Q${match[2]}` : ''
-    }
+
+    if (!year || !q) return input
+
+    year = year.length === 2 ? '20' + year : year
+    q = q.startsWith('Q') ? q : 'Q' + q
+
+    return `${q} ${year}`
   }
 
-  if (!year || !q) return input
 
-  year = year.length === 2 ? '20' + year : year
-  q = q.startsWith('Q') ? q : 'Q' + q
+  const sortByQuarterAndYear = (a, b) => {
+    const [qa, ya] = a.quarter.split(' ')
+    const [qb, yb] = b.quarter.split(' ')
 
-  return `${q} ${year}`
-}
+    const yearA = parseInt(ya)
+    const yearB = parseInt(yb)
+    const quarterA = parseInt(qa.replace('Q', ''))
+    const quarterB = parseInt(qb.replace('Q', ''))
 
+    // Sortiere nach Jahr, dann Quartal
+    if (yearA !== yearB) return yearA - yearB
+    return quarterA - quarterB
+  }
 
-const sortByQuarterAndYear = (a, b) => {
-  const [qa, ya] = a.quarter.split(' ')
-  const [qb, yb] = b.quarter.split(' ')
+  const getLatestEntry = (symbol) => {
+    const arr = allStockData.value[symbol].data
+    const last = arr[arr.length - 1]
+    allStockData.value[symbol].lastQuarter = last.quarter ?? null
+    allStockData.value[symbol].lastRevenue = last.revenue ?? null
+    console.log("new", allStockData.value[symbol])
 
-  const yearA = parseInt(ya)
-  const yearB = parseInt(yb)
-  const quarterA = parseInt(qa.replace('Q', ''))
-  const quarterB = parseInt(qb.replace('Q', ''))
-
-  // Sortiere nach Jahr, dann Quartal
-  if (yearA !== yearB) return yearA - yearB
-  return quarterA - quarterB
-}
-
+  }
 
   const buildAllStockData = async () => {
+    isReady.value = false
     await addStockToGlobal('AAPL', 3, 1)
-    await addStockToGlobal('AMZN', 7, 1)
-    await addStockToGlobal('GOOG', 3, 1)
-    await addStockToGlobal('META', 3, 1)
-    await addStockToGlobal('MSFT', 7, 1)
-    await addStockToGlobal('NVDA', 3, 1)
-    await addStockToGlobal('TSLA', 13, 1)
-     console.log(allStockData)
+    // await addStockToGlobal('AMZN', 7, 1)
+    // await addStockToGlobal('GOOG', 3, 1)
+    // await addStockToGlobal('META', 3, 1)
+    // await addStockToGlobal('MSFT', 7, 1)
+    // await addStockToGlobal('NVDA', 3, 1)
+    // await addStockToGlobal('TSLA', 13, 1)
+    console.log(allStockData)
+    getLatestEntry('AAPL');
+    isReady.value = true
   }
-  return { loading, allStockData, addStockToGlobal, buildAllStockData }
+
+
+
+  return { loading, allStockData, addStockToGlobal, buildAllStockData, getLatestEntry, isReady }
 }
 
 

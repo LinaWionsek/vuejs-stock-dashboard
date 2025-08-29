@@ -1,17 +1,30 @@
 <template>
   <div class="overview-bg-card">
+    <BaseCard>
+     <div class="text-xs">
+      Reveneue {{ allStockData.AAPL.lastQuarter }}
+     </div> 
+     <div>
+      
+      
+     </div>
+    </BaseCard>
+    <BaseCard></BaseCard>
+    <!-- <BaseCard></BaseCard>
     <BaseCard></BaseCard>
     <BaseCard></BaseCard>
-    <BaseCard></BaseCard>
-    <BaseCard></BaseCard>
-    <BaseCard></BaseCard>
-    <BaseCard></BaseCard>
+    <BaseCard></BaseCard> -->
   </div>
 </template>
 
 <script setup>
 
+import { useStockData } from '@/composables/useStockData';
 import BaseCard from './BaseCard.vue';
+
+const {
+  allStockData,
+} = useStockData();
 
 </script>
 
