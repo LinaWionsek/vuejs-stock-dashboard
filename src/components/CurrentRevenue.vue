@@ -2,8 +2,8 @@
   <div class="overview-bg-card">
     <BaseCard class="gap-2">
       <div class="flex items-center text-xl">
-        <img :src="allStockData.AAPL.logo" :alt="allStockData.AAPL.name + 'logo'" class="w-5 h-5 mr-2" />
-        <span>Apple</span>
+        <img :src="allStockData.AAPL.logo" :alt="allStockData.AAPL.name + 'logo'" class=" h-5 mr-2" />
+        <span>{{ allStockData.AAPL.name }}</span>
       </div>
 
       <div class="flex flex-col gap-1">
@@ -24,7 +24,8 @@
         <div class="text-[8px]">In Bill USD</div>
       </div>
     </BaseCard>
-    <BaseCard></BaseCard>
+    <BaseCard>
+    </BaseCard>
     <!-- <BaseCard></BaseCard>
     <BaseCard></BaseCard>
     <BaseCard></BaseCard>
