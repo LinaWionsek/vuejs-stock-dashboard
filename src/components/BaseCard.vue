@@ -12,6 +12,8 @@ export default {
 
 <style scoped>
 .base-card {
+  display: flex;
+  flex-direction: column;
   background-color: #011f35;
   border-radius: 16px;
   padding: 20px 24px;
