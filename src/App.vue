@@ -47,7 +47,7 @@ onMounted(async () => {
     // addStockToGlobal('AMZN', 'Amazon', amazonLogo, 7, 1),
     // addStockToGlobal('GOOG', 'Alphabet', googleLogo, 3, 1),
     // addStockToGlobal('META', 'Meta', metaLogo, 3, 1),
-    // addStockToGlobal('MSFT', 'Microsoft', microsoftLogo 7, 1),
+    // addStockToGlobal('MSFT', 'Microsoft', microsoftLogo, 7, 1),
     // addStockToGlobal('NVDA', 'Nvidia', nvidiago, 3, 1),
     // addStockToGlobal('TSLA', 'Tesla', teslaLogo, 13, 1)
   ])

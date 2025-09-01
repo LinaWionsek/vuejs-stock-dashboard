@@ -47,9 +47,10 @@ export function useStockData() {
       //Round values to 2 decimal places
       const lastQuart = last.quarter
       const lastRev = parseFloat(last.revenue.toFixed(2)) //tofixed rundet, parsefloat macht es zu zahl
-      const diff = parseFloat(salesDiff.toFixed(2))
-      const salesPerc = parseFloat(salesChangePercent.toFixed(2))
-      const pos = diff >= 0
+      const diff = salesDiff.toFixed(2)
+      const salesPerc = salesChangePercent.toFixed(2)
+      const pos = salesDiff >= 0
+     
       
       console.log("diff:", diff, "percent:", salesPerc, "last", last, "prev", prev)
 
@@ -60,7 +61,7 @@ export function useStockData() {
         data: sorted,              // All entries (sorted)
         lastQuarter: lastQuart,    // Latest quarter name
         lastRevenue: lastRev,      // Latest revenue (rounded)
-        difference: diff,          // Revenue change in $ bn
+        difference: pos? '+' + diff + ' ↑' : diff +  ' ↓',          // Revenue change in $ bn
         percentChange: salesPerc,  // % change from previous quarter
         positive: pos              // true if revenue increased
       }

@@ -1,42 +1,35 @@
 <template>
+  <!-- Object.entries wandelt das hereingegebene Objekt in dein Array um -->
   <div class="overview-bg-card">
-    <BaseCard class="gap-2">
+    <BaseCard class="gap-2" v-for="value in allStockData" :key="value.name">
       <div class="flex items-center text-xl">
-        <img :src="allStockData.AAPL.logo" :alt="allStockData.AAPL.name + 'logo'" class=" h-5 mr-2" />
-        <span>{{ allStockData.AAPL.name }}</span>
+        <img :src="value.logo" :alt="value.name + 'logo'" class="h-5 mr-2" />
+        <span>{{ value.name }}</span>
       </div>
-
       <div class="flex flex-col gap-1">
-        <div class="text-xs">Reveneue {{ allStockData.AAPL.lastQuarter }}</div>
+        <div class="text-xs">Reveneue {{ value.lastQuarter }}</div>
         <div class="flex items-center">
           <div class="text-2xl mr-1">
-            {{ allStockData.AAPL.lastRevenue }}
+            {{ value.lastRevenue }}
           </div>
           <div class="text-[13px]">
-            <div :class="allStockData.AAPL.positive ? 'text-green-500' : 'text-red-500'">
-              {{ allStockData.AAPL.difference }}
+            <div :class="value.positive ? 'text-green-500' : 'text-red-500'">
+              {{ value.difference }}
             </div>
-            <div :class="allStockData.AAPL.positive ? 'text-green-500' : 'text-red-500'">
-              {{ allStockData.AAPL.percentChange }} %
+            <div :class="['flex','justify-end',value.positive ? 'text-green-500' : 'text-red-500']">
+              {{ value.percentChange }} %
             </div>
           </div>
         </div>
         <div class="text-[8px]">In Bill USD</div>
       </div>
     </BaseCard>
-    <BaseCard>
-    </BaseCard>
-    <!-- <BaseCard></BaseCard>
-    <BaseCard></BaseCard>
-    <BaseCard></BaseCard>
-    <BaseCard></BaseCard> -->
   </div>
 </template>
 
 <script setup>
 import { useStockData } from "@/composables/useStockData";
 import BaseCard from "./BaseCard.vue";
-
 
 const { allStockData } = useStockData();
 </script>
