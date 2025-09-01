@@ -6,7 +6,7 @@ const isReady = ref(false)
 
 export function useStockData() {
 
-  const addStockToGlobal = async (symbol, revenueIndex, quarterIndex) => {
+  const addStockToGlobal = async (symbol, companyName, companyLogo, revenueIndex, quarterIndex) => {
     loading.value = true
 
     try {
@@ -55,6 +55,8 @@ export function useStockData() {
 
       //Store in global stock data object
       allStockData.value[symbol] = {
+        name: companyName,
+        logo: companyLogo,
         data: sorted,              // All entries (sorted)
         lastQuarter: lastQuart,    // Latest quarter name
         lastRevenue: lastRev,      // Latest revenue (rounded)

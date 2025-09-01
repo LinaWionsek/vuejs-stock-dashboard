@@ -27,6 +27,8 @@ import RevenueBreakdown from "./components/RevenueBreakdown.vue";
 import { useStockData } from "./composables/useStockData";
 import { onMounted } from "vue";
 
+import aaplLogo from "@/assets/img/aapl.png";
+
 // Hole Daten von der API (AAPL)
 const { addStockToGlobal, isReady } = useStockData();
 
@@ -34,7 +36,7 @@ onMounted(async () => {
   isReady.value = false
   // Die "Magnificent 7" laden
   await Promise.all([
-    addStockToGlobal('AAPL', 3, 1),
+    addStockToGlobal('AAPL', 'Apple', aaplLogo, 3, 1),
     // addStockToGlobal('AMZN', 7, 1),
     // addStockToGlobal('GOOG', 3, 1),
     // addStockToGlobal('META', 3, 1),

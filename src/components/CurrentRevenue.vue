@@ -2,7 +2,7 @@
   <div class="overview-bg-card">
     <BaseCard class="gap-2">
       <div class="flex items-center text-xl">
-        <img :src="aaplLogo" alt="Apple Logo" class="w-5 h-5 mr-2" />
+        <img :src="allStockData.AAPL.logo" :alt="allStockData.AAPL.name + 'logo'" class="w-5 h-5 mr-2" />
         <span>Apple</span>
       </div>
 
@@ -35,7 +35,7 @@
 <script setup>
 import { useStockData } from "@/composables/useStockData";
 import BaseCard from "./BaseCard.vue";
-import aaplLogo from "@/assets/img/aapl.png";
+
 
 const { allStockData } = useStockData();
 </script>
