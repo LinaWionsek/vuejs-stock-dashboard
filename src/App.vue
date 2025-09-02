@@ -5,7 +5,7 @@
       <h1 class="ml-6 text-white text-4xl font-medium">The Magnificent Seven Companies</h1>
     </div>
     <div class="flex flex-col items-center">
-      <CurrentRevenue class="flex items-center justify-center relative mt-12">
+      <CurrentRevenue class="flex items-center relative mt-12">
         <img class="absolute right-2" src="../public/img/arrow.png" alt="" />
       </CurrentRevenue>
       <div class="flex gap-8 mt-8 mb-8">
