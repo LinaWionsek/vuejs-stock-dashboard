@@ -15,6 +15,7 @@ export function useStockData() {
       if (!res.ok) throw new Error(`Error retrieving data for AAPL ${symbol}`)
 
       const data = await res.json()
+      console.log("data", data)
       const revenueObj = data[revenueIndex]
       const quarterObj = data[quarterIndex]
 
@@ -65,6 +66,8 @@ export function useStockData() {
         percentChange: salesPerc,  // % change from previous quarter
         positive: pos              // true if revenue increased
       }
+
+      console.log(allStockData.value[symbol])
 
     } catch (err) {
       console.warn(`Error at ${symbol}:`, err.message)

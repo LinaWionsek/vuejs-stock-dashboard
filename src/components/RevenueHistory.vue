@@ -6,8 +6,7 @@
     <div v-else-if="error">Fehler: {{ error }}</div>
     <div v-else class="flex flex-wrap">
       <div>
-        Revenue:
-        <!-- {{ allStockData.AAPL }} -->
+        <canvas ref="canvasRef"></canvas>
       </div>
     </div>
   </BaseCard>
@@ -15,17 +14,36 @@
 
 <script setup>
 import BaseCard from "./BaseCard.vue";
-// import { useStockData } from "@/composables/useStockData";
-import { onMounted } from "vue";
+import { onMounted, onBeforeUnmount, ref } from "vue";
+import { Chart } from "chart.js/auto";
 
-// Hole Daten von der API (AAPL)
-// const {
-//   allStockData
-// } = useStockData();
+const canvasRef = ref(null);
+let chart = null;
 
-onMounted(async () => {
+onMounted(() => {
+  chart = new Chart(canvasRef.value, {
+    type: "bar", // oder "line", "pie", ...
+    data: {
+      labels: ["A", "B", "C", "D"],
+      datasets: [
+        {
+          label: "Beispiel",
+          data: [12, 19, 3, 5],
+          backgroundColor: "rgba(54, 162, 235, 0.5)",
+          borderColor: "rgba(54, 162, 235, 1)",
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      scales: { y: { beginAtZero: true } },
+    },
+  });
+});
 
-
+onBeforeUnmount(() => {
+  chart?.destroy();
 });
 </script>
 
