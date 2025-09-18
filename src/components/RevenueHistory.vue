@@ -14,15 +14,17 @@
 
 <script setup>
 import BaseCard from "./BaseCard.vue";
+import { useStockData } from "@/composables/useStockData";
 import { onMounted, onBeforeUnmount, ref } from "vue";
 import { Chart } from "chart.js/auto";
 
-const canvasRef = ref(null);
+
+const canvasRef = ref(useStockData);
 let chart = null;
 
 onMounted(() => {
   chart = new Chart(canvasRef.value, {
-    type: "bar", // oder "line", "pie", ...
+    type: "line", 
     data: {
       labels: ["A", "B", "C", "D"],
       datasets: [
@@ -37,7 +39,11 @@ onMounted(() => {
     },
     options: {
       responsive: true,
-      scales: { y: { beginAtZero: true } },
+      plugins: {
+        legend: {
+          position: "right",
+        },
+      },
     },
   });
 });
